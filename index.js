@@ -5,6 +5,7 @@ import { makeExecutableSchema } from 'graphql-tools';
 
 import typeDefs from './schema';
 import resolvers from './resolvers';
+import models from './models';
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -30,4 +31,9 @@ app.use(
   }),
 );
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
+// models.sequelize.sync({ force: true }).then(() => { //force for dropping
+models.sequelize.sync().then(() => {
+  console.log('Db is synced');
+  app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
+});
+

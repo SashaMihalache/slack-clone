@@ -2,10 +2,16 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
+import path from 'path';
+import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
 
-import typeDefs from './schema';
-import resolvers from './resolvers';
 import models from './models';
+
+const typesArray = fileLoader(path.join(__dirname, './schema'));
+const resolversArray = fileLoader(path.join(__dirname, './resolvers'));
+
+const typeDefs = mergeTypes(typesArray);
+const resolvers = mergeResolvers(resolversArray);
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -21,6 +27,12 @@ app.use(
   bodyParser.json(),
   graphqlExpress({
     schema,
+    context: {
+      models,
+      user: {
+        id: 1,
+      },
+    },
   }),
 );
 
@@ -32,7 +44,7 @@ app.use(
 );
 
 // sync({ force: true }) //force for dropping
-models.sequelize.sync({ force: true }).then(() => {
+models.sequelize.sync().then(() => {
   console.log('Db is synced');
   app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
 });

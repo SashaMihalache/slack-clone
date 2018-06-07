@@ -31,8 +31,8 @@ app.use(
   }),
 );
 
-// models.sequelize.sync({ force: true }).then(() => { //force for dropping
-models.sequelize.sync().then(() => {
+// sync({ force: true }) //force for dropping
+models.sequelize.sync({ force: true }).then(() => {
   console.log('Db is synced');
   app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
 });

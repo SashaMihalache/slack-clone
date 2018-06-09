@@ -20,6 +20,8 @@ const schema = makeExecutableSchema({
 });
 
 const PORT = 8080;
+const SECRET = 'somethingsecret';
+const SECRET2 = 'somethingsecretmore';
 const gqlEndpoint = '/graphql';
 const app = express();
 
@@ -35,6 +37,8 @@ app.use(
       user: {
         id: 1,
       },
+      SECRET,
+      SECRET2,
     },
   }),
 );

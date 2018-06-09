@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { pick } from 'lodash';
+import { tryLogin } from '../../auth';
 
 const formatErrors = (e, models) => {
   if (e instanceof models.sequelize.ValidationError) {
@@ -41,5 +42,7 @@ export default {
         };
       }
     },
+    login: async (parent, { email, password }, { models, SECRET, SECRET2 }) =>
+      tryLogin(email, password, models, SECRET, SECRET2),
   },
 };

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "mobx": "^5.0.0",
+    "mobx-react": "^5.2.2",
     "react": "^16.4.0",
     "react-apollo": "1.4.16",
     "react-dom": "^16.4.0",

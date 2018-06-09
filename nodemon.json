@@ -1,0 +1,5 @@
+{
+  "ignore": [
+    "slack-clone-client/**/*.*"
+  ]
+}

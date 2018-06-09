@@ -8,8 +8,8 @@ import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
 
 import models from './models';
 
-const typesArray = fileLoader(path.join(__dirname, './schema'));
-const resolversArray = fileLoader(path.join(__dirname, './resolvers'));
+const typesArray = fileLoader(path.join(__dirname, './graphql/schema'));
+const resolversArray = fileLoader(path.join(__dirname, './graphql/resolvers'));
 
 const typeDefs = mergeTypes(typesArray);
 const resolvers = mergeResolvers(resolversArray);

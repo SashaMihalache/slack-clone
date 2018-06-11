@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
-import { findIndex } from 'lodash';
+import findIndex from 'lodash/findIndex';
 import decode from 'jwt-decode';
 import gql from 'graphql-tag';
 import Teams from '../components/Teams';
@@ -16,7 +16,7 @@ const Sidebar = ({ data: { allTeams, loading, error }, currentTeamId }) => {
     return null;
   }
 
-  const teamIdx = findIndex(allTeams, ['id', currentTeamId])
+  const teamIdx = currentTeamId ? findIndex(allTeams, ['id', parseInt(currentTeamId, 10)]) : 0;
   const team = allTeams[teamIdx];
   let username = '';
 
@@ -26,8 +26,6 @@ const Sidebar = ({ data: { allTeams, loading, error }, currentTeamId }) => {
     // eslint-disable-next-line
     username = tkn.user.username;
   } catch (error) { }
-
-  console.log(team);
 
   return (
     <React.Fragment>

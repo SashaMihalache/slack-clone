@@ -1,4 +1,4 @@
-import { pick } from 'lodash';
+import pick from 'lodash/pick';
 
 export default (e, models) => {
   if (e instanceof models.sequelize.ValidationError) {

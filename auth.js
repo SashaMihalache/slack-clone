@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { pick } from 'lodash';
+import pick from 'lodash/lodash';
 import bcrypt from 'bcrypt';
 
 export const createTokens = async (user, secret, secret2) => {

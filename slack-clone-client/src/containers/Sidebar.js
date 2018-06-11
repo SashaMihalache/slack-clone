@@ -1,7 +1,8 @@
 import React from 'react';
-import { gql, graphql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import { findIndex } from 'lodash';
 import decode from 'jwt-decode';
+import gql from 'graphql-tag';
 import Teams from '../components/Teams';
 import Channels from '../components/Channels';
 
@@ -25,6 +26,8 @@ const Sidebar = ({ data: { allTeams, loading, error }, currentTeamId }) => {
     // eslint-disable-next-line
     username = tkn.user.username;
   } catch (error) { }
+
+  console.log(team);
 
   return (
     <React.Fragment>

@@ -5,6 +5,7 @@ const sequelize = new Sequelize('slack', 'sasha', '', {
   define: {
     underscored: true,
   },
+  operatorsAliases: Sequelize.Op,
 });
 
 const db = {

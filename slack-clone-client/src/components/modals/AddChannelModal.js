@@ -4,7 +4,7 @@ import { withFormik } from 'formik';
 import findIndex from 'lodash/findIndex';
 import gql from 'graphql-tag';
 import { graphql, compose } from 'react-apollo';
-import { allTeamsQuery } from '../graphql/team';
+import { allTeamsQuery } from '../../graphql/team';
 
 const AddChannelModal = ({ open, onClose, values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
   <Modal open={open} onClose={onClose} >

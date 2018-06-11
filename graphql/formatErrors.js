@@ -1,6 +1,7 @@
 import pick from 'lodash/pick';
 
 export default (e, models) => {
+  console.log('Format Errors', models);
   if (e instanceof models.sequelize.ValidationError) {
     return e.errors.map(x => pick(x, ['path', 'message']));
   }

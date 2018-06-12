@@ -53,7 +53,7 @@ const messagesQuery = gql`
 `;
 
 export default graphql(messagesQuery, {
-  variables: props => {
+  variables: props => ({
     channelId: props.channelId
-  }
+  })
 })(MessageContainer);

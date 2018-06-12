@@ -6,6 +6,9 @@ import path from 'path';
 import cors from 'cors';
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
 import jwt from 'jsonwebtoken';
+import { createServer } from 'http';
+import { execute, subscribe } from 'graphql';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 
 import models from './models';
 import { refreshTokens } from './auth';
@@ -72,9 +75,26 @@ app.use(
   }),
 );
 
+const server = createServer(app);
+
 // sync({ force: true }) //force for dropping
 models.sequelize.sync().then(() => {
   console.log('Db is synced');
-  app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
+  server.listen(PORT, () => {
+    // eslint-disable-next-line no-new
+    new SubscriptionServer(
+      {
+        execute,
+        subscribe,
+        schema,
+      },
+      {
+        server,
+        path: '/subscriptions',
+      },
+    );
+
+    console.log(`Listening on port ${PORT}...`);
+  });
 });
 

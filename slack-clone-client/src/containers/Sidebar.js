@@ -40,8 +40,6 @@ class Sidebar extends React.Component {
       isOwner = user.id === team.owner;
     } catch (error) { }
 
-    console.log(isOwner);
-
     return (
       <React.Fragment>
         <Teams teams={teams} />

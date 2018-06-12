@@ -6,7 +6,7 @@ export default `
     members: [User!]!
     channels: [Channel!]!
   }
-
+ 
   type CreateTeamResponse {
     ok: Boolean!
     team: Team
@@ -15,6 +15,7 @@ export default `
 
   type Query {
     allTeams: [Team!]!
+    inviteTeams: [Team!]!
   }
 
   type VoidResponse {

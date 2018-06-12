@@ -67,6 +67,8 @@ class Login extends Component {
       : null
   }
 
+  goToRegister = () => this.props.history.push('/register');
+
   render() {
     const { email, password, errors: { emailError, passwordError } } = this;
 
@@ -94,6 +96,7 @@ class Login extends Component {
             />
           </Form.Field>
           <Button onClick={this.onSubmit}>Submit</Button>
+          <Button onClick={this.goToRegister}>Register</Button>
         </Form>
 
         {this.handleErrorMessage(this.errors)}

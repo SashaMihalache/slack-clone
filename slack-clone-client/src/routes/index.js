@@ -32,7 +32,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
       isAuthenticated() ? (
         <Component {...props} />
       ) : (
-        <Redirect to={{ pathname: '/login' }} />
+          <Redirect to={{ pathname: '/login' }} />
         )
     )}
   />
@@ -44,7 +44,7 @@ const Router = () => (
       <PrivateRoute path='/' exact component={Home} />
       <Route path='/register' exact component={Register} />
       <Route path='/login' exact component={Login} />
-      <Route path='/team/view/:teamId?/:channelId?' exact component={ViewTeam} />
+      <PrivateRoute path='/team/view/:teamId?/:channelId?' exact component={ViewTeam} />
       <PrivateRoute path='/team/new' exact component={CreateTeam} />
     </Switch>
   </BrowserRouter>

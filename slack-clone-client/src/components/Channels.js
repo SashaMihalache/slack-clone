@@ -51,7 +51,7 @@ const user = ({ id, name }) => (
   <SideBarListItem key={`user-${id}`}> <Bubble /> {name}</SideBarListItem>
 )
 
-export default ({ teamName, username, channels, users, onAddChannelClick, teamId, onInvitePeopleClick }) => (
+export default ({ teamName, username, channels, users, onAddChannelClick, teamId, onInvitePeopleClick, isOwner }) => (
   <ChannelWrapper>
     <PushLeft>
       <TeamNameHeader>{teamName}</TeamNameHeader>
@@ -61,7 +61,7 @@ export default ({ teamName, username, channels, users, onAddChannelClick, teamId
       <SideBarList>
         <SideBarListHeader>
           Channels
-          <Icon name='add circle' onClick={onAddChannelClick} />
+          {isOwner && <Icon name='add circle' onClick={onAddChannelClick} />}
         </SideBarListHeader>
         {channels.map(c => channel(c, teamId))}
       </SideBarList>
@@ -72,10 +72,13 @@ export default ({ teamName, username, channels, users, onAddChannelClick, teamId
         {users.map(user)}
       </SideBarList>
     </div>
-    <div>
-      <a href="#invite-people" onClick={onInvitePeopleClick}>
-        + Invite People
+    {isOwner && (
+      <div>
+        <a href="#invite-people" onClick={onInvitePeopleClick}>
+          + Invite People
       </a>
-    </div>
+      </div>
+    )
+    }
   </ChannelWrapper>
 );

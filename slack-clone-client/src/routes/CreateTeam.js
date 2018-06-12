@@ -1,94 +1,75 @@
-import React, { Component } from 'react';
-import { observer } from 'mobx-react';
+import React from 'react';
 import { extendObservable } from 'mobx';
-import { Container, Header, Input, Button, Form, Message } from 'semantic-ui-react';
+import { observer } from 'mobx-react';
+import { Message, Form, Button, Input, Container, Header } from 'semantic-ui-react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
-class CreateTeam extends Component {
+class CreateTeam extends React.Component {
   constructor(props) {
     super(props);
 
     extendObservable(this, {
       name: '',
-      errors: {}
-    })
-  }
-
-  onChange = (e) => {
-    const { name, value } = e.target;
-    this[name] = value;
+      errors: {},
+    });
   }
 
   onSubmit = async () => {
     const { name } = this;
-    let response = null
+    let response = null;
 
     try {
       response = await this.props.mutate({
-        variables: { name }
-      })
-    }
-    catch (err) {
+        variables: { name },
+      });
+    } catch (err) {
       this.props.history.push('/login');
       return;
     }
+
+    console.log(response);
 
     const { ok, errors, team } = response.data.createTeam;
 
     if (ok) {
       this.props.history.push(`/team/view/${team.id}`);
     } else {
-      this.handleFormErrors(errors);
+      const err = {};
+      errors.forEach(({ path, message }) => {
+        err[`${path}Error`] = message;
+      });
+
+      this.errors = err;
     }
-  }
+  };
 
-  handleFormErrors = (errors) => {
-    const err = {};
-    errors.forEach(({ path, message }) => {
-      err[`${path}Error`] = message;
-    });
+  onChange = (e) => {
+    const { name, value } = e.target;
+    this[name] = value;
+  };
 
-    this.errors = err;
-  }
+  render() {
+    const { name, errors: { nameError } } = this;
 
-  handleErrorMessage = ({ nameError }) => {
     const errorList = [];
 
     if (nameError) {
       errorList.push(nameError);
     }
 
-    return errorList.length
-      ? <Message
-        error
-        header="There was something wrong with your submission"
-        list={errorList}
-      />
-      : null
-  }
-
-  render() {
-    const { name, errors: { nameError } } = this;
-
     return (
       <Container text>
-        <Header as='h2'>Create Team</Header>
+        <Header as="h2">Create a team</Header>
         <Form>
-          <Form.Field error={!!nameError} >
-            <Input
-              name='name'
-              onChange={this.onChange}
-              value={name}
-              placeholder='name'
-              fluid
-            />
+          <Form.Field error={!!nameError}>
+            <Input name="name" onChange={this.onChange} value={name} placeholder="Name" fluid />
           </Form.Field>
           <Button onClick={this.onSubmit}>Submit</Button>
         </Form>
-
-        {this.handleErrorMessage(this.errors)}
-
+        {errorList.length ? (
+          <Message error header="There was some errors with your submission" list={errorList} />
+        ) : null}
       </Container>
     );
   }

@@ -2,30 +2,30 @@ import React from 'react';
 import { graphql } from 'react-apollo';
 import findIndex from 'lodash/findIndex';
 import { Redirect } from 'react-router-dom';
-import { allTeamsQuery } from '../graphql/team';
-import AppLayout from '../components/AppLayout';
+
 import Header from '../components/Header';
 import Messages from '../components/Messages';
 import SendMessage from '../components/SendMessage';
+import AppLayout from '../components/AppLayout';
 import Sidebar from '../containers/Sidebar';
+import { allTeamsQuery } from '../graphql/team';
 
-const ViewTeam = ({ data: { loading, error, allTeams, inviteTeams }, match: { params: { teamId, channelId } } }) => {
+const ViewTeam = ({
+  data: { loading, allTeams, inviteTeams },
+  match: { params: { teamId, channelId } },
+}) => {
   if (loading) {
     return null;
   }
 
-  if (error) {
-    console.log(error);
-  }
   const teams = [...allTeams, ...inviteTeams];
 
   if (!teams.length) {
-    return <Redirect to='/team/new' />;
+    return <Redirect to="/team/new" />;
   }
 
-
   const teamIdInteger = parseInt(teamId, 10);
-  const teamIdx = teamIdInteger ? findIndex(allTeams, ['id', teamIdInteger]) : 0;
+  const teamIdx = teamIdInteger ? findIndex(teams, ['id', teamIdInteger]) : 0;
   const team = teamIdx === -1 ? teams[0] : teams[teamIdx];
 
   const channelIdInteger = parseInt(channelId, 10);
@@ -37,27 +37,22 @@ const ViewTeam = ({ data: { loading, error, allTeams, inviteTeams }, match: { pa
       <Sidebar
         teams={teams.map(t => ({
           id: t.id,
-          letter: t.name.charAt(0).toUpperCase()
+          letter: t.name.charAt(0).toUpperCase(),
         }))}
-        team={team} />
-      {
-        channel && (
-          <React.Fragment>
-            <Header channelName={channel.name} />
-            <Messages channelId={channel.id} >
-              <ul className="message-list">
-                <li />
-                <li />
-              </ul>
-            </Messages>
-            <SendMessage channelName={channel.name} >
-              <input type="text" placeholder="CSS Grid Layout Module" />
-            </SendMessage>
-          </React.Fragment>
-        )
-      }
+        team={team}
+      />
+      {channel && <Header channelName={channel.name} />}
+      {channel && (
+        <Messages channelId={channel.id}>
+          <ul className="message-list">
+            <li />
+            <li />
+          </ul>
+        </Messages>
+      )}
+      {channel && <SendMessage channelName={channel.name} />}
     </AppLayout>
-  )
-}
+  );
+};
 
 export default graphql(allTeamsQuery)(ViewTeam);

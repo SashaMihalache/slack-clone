@@ -8,6 +8,7 @@ import Messages from '../components/Messages';
 import SendMessage from '../components/SendMessage';
 import AppLayout from '../components/AppLayout';
 import Sidebar from '../containers/Sidebar';
+import MessageContainer from '../containers/MessageContainer';
 import { allTeamsQuery } from '../graphql/team';
 
 const ViewTeam = ({
@@ -43,14 +44,9 @@ const ViewTeam = ({
       />
       {channel && <Header channelName={channel.name} />}
       {channel && (
-        <Messages channelId={channel.id}>
-          <ul className="message-list">
-            <li />
-            <li />
-          </ul>
-        </Messages>
+        <MessageContainer channelId={channel.id} />
       )}
-      {channel && <SendMessage channelName={channel.name} />}
+      {channel && <SendMessage channelName={channel.name} channelId={channel.id} />}
     </AppLayout>
   );
 };

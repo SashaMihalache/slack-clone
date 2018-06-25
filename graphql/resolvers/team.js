@@ -5,41 +5,25 @@ export default {
   Query: {
     allTeams: requiresAuth.createResolver(async (parent, args, { models, user }) =>
       models.Team.findAll({ where: { owner: user.id } }, { raw: true })),
-    // inviteTeams: requiresAuth.createResolver(async (parent, args, { models, user }) =>
-    //   models.Team.findAll({
-    //     include: [{
-    //       model: models.User,
-    //       where: { id: user.id },
-    //     }],
-    //   }, { raw: true })),
     inviteTeams: requiresAuth.createResolver(async (parent, args, { models, user }) =>
-      models.sequelize.query(
-        'select * from teams join members on id = team_id where user_id = ?',
-        {
-          replacements: [user.id],
-          model: models.Team,
-        },
-      )),
+      models.sequelize.query('select * from teams join members on id = team_id where user_id = ?', {
+        replacements: [user.id],
+        model: models.Team,
+      })),
+    // inviteTeams: requiresAuth.createResolver(async (parent, args, { models, user }) =>
+    //   models.Team.findAll(
+    //     {
+    //       include: [
+    //         {
+    //           model: models.User,
+    //           where: { id: user.id },
+    //         },
+    //       ],
+    //     },
+    //     { raw: true },
+    //   )),
   },
   Mutation: {
-    createTeam: requiresAuth.createResolver(async (parent, args, { models, user }) => {
-      try {
-        const response = await models.sequelize.transaction(async () => {
-          const team = await models.Team.create({ ...args, owner: user.id });
-          await models.Channel.create({ name: 'general', public: true, teamId: team.id });
-          return team;
-        });
-        return {
-          ok: true,
-          team: response,
-        };
-      } catch (err) {
-        return {
-          ok: false,
-          errors: formatErrors(err, models),
-        };
-      }
-    }),
     addTeamMember: requiresAuth.createResolver(async (parent, { email, teamId }, { models, user }) => {
       try {
         const teamPromise = models.Team.findOne({ where: { id: teamId } }, { raw: true });
@@ -62,6 +46,26 @@ export default {
           ok: true,
         };
       } catch (err) {
+        console.log(err);
+        return {
+          ok: false,
+          errors: formatErrors(err, models),
+        };
+      }
+    }),
+    createTeam: requiresAuth.createResolver(async (parent, args, { models, user }) => {
+      try {
+        const response = await models.sequelize.transaction(async () => {
+          const team = await models.Team.create({ ...args, owner: user.id });
+          await models.Channel.create({ name: 'general', public: true, teamId: team.id });
+          return team;
+        });
+        return {
+          ok: true,
+          team: response,
+        };
+      } catch (err) {
+        console.log(err);
         return {
           ok: false,
           errors: formatErrors(err, models),

@@ -1,4 +1,5 @@
 import { PubSub, withFilter } from 'graphql-subscriptions';
+
 import requiresAuth from '../../permissions';
 
 const pubsub = new PubSub();
@@ -14,12 +15,24 @@ export default {
       ),
     },
   },
+  Message: {
+    user: ({ user, userId }, args, { models }) => {
+      if (user) {
+        return user;
+      }
+
+      return models.User.findOne({ where: { id: userId } }, { raw: true });
+    },
+  },
   Query: {
     messages: requiresAuth.createResolver(async (parent, { channelId }, { models }) =>
-      models.Message.findAll({ order: [['created_at', 'ASC']], where: { channelId } }, { raw: true })),
+      models.Message.findAll(
+        { order: [['created_at', 'ASC']], where: { channelId } },
+        { raw: true },
+      )),
   },
   Mutation: {
-    createMessage: async (parent, args, { models, user }) => {
+    createMessage: requiresAuth.createResolver(async (parent, args, { models, user }) => {
       try {
         const message = await models.Message.create({
           ...args,
@@ -46,16 +59,9 @@ export default {
 
         return true;
       } catch (err) {
+        console.log(err);
         return false;
       }
-    },
-  },
-  Message: {
-    user: ({ userId, user }, args, { models }) => {
-      if (user) {
-        return user;
-      }
-      return models.User.findOne({ where: { id: userId } }, { raw: true });
-    },
+    }),
   },
 };

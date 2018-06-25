@@ -6,8 +6,8 @@ import gql from 'graphql-tag';
 const Home = ({ data: { allUsers = [] } }) => {
   return (
     <div>
-      <Link to={`/team/view`} >Chat Room</Link>
-      <Link to={`/team/new`} >New Team</Link>
+      <Link to={`/view-team`} >Chat Room</Link>
+      <Link to={`/create-team`} >New Team</Link>
       <Link to={`/login`} >Login</Link>
       <Link to={`/register`} >Register</Link>
       {allUsers.map(u => <h1 key={u.id}>{u.email}</h1>)}

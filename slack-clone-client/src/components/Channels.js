@@ -40,7 +40,7 @@ const Green = styled.span`color: #38978d;`;
 const Bubble = ({ on = true }) => (on ? <Green>●</Green> : '◌');
 
 const channel = ({ id, name }, teamId) => (
-  <Link to={`/team/view/${teamId}/${id}`} key={`channel-${id}`}>
+  <Link to={`/view-team/${teamId}/${id}`} key={`channel-${id}`}>
     <SideBarListItem >
       # {name}
     </SideBarListItem>

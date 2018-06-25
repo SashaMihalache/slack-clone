@@ -15,13 +15,13 @@ const ViewTeam = ({
   match: { params: { teamId, channelId } },
 }) => {
   if (loading) {
-    return null;
+    return <div />;
   }
 
   const teams = [...allTeams, ...inviteTeams];
 
   if (!teams.length) {
-    return <Redirect to="/team/new" />;
+    return <Redirect to="/create-team" />;
   }
 
   const teamIdInteger = parseInt(teamId, 10);
